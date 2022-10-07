@@ -1,3 +1,5 @@
+using JLD
+
 include("../src/single_instance.jl")
 include("../src/population_dynamics.jl")
 
@@ -6,7 +8,9 @@ Np = 10^4;
 lambda = -1/3;
 epsilon = 1e-4;  ###To determine ρ_ϵ(λ)
 
-Ts = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+#Ts = [0.2, 0.3, 0.4]
+#Ts = [0.6, 0.7, 0.8]
+Ts = [0.5, 1.1, 1.2]
 ns = [2^10,2^11, 2^12, 2^13, 2^14]
 nsims = Int64.(2^17 ./ns)
 
