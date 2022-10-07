@@ -7,12 +7,12 @@ function generate_sparse_barrat_matrix(n::Int64,c::Int64)
     adj = adjacency_matrix(L);
     energies = rand(dene, n);
     #M = 1.0*adj;
-    list_neigbours = L.fadjlist;
+    list_neighbours = LightGraphs.SimpleGraphs.fadj(L)
 
     return energies, list_neighbours, adj, L
 end
 
-function barrat_matrix(energies, list, adj, n, c, T)
+function barrat_matrix(energies::Array, list::Array, adj::SparseMatrixCSC, n::Int64, c::Int64, T::Float64)
     beta = 1/T
     M = 1.0*adj;
 
@@ -37,7 +37,7 @@ function barrat_matrix(energies, list, adj, n, c, T)
     Ms = Diagonal(p_inv)*M *Diagonal(p_dir);
 
    
-
+    #    return  Symmetric(Ms)
     return  Symmetric(Matrix(Ms))
 end
 
