@@ -1,3 +1,4 @@
+
 using Distributions, LightGraphs, LinearAlgebra, SparseArrays, StatsBase
 
 ###Generates the instances
@@ -138,7 +139,7 @@ function local_dos(lambda::Float64, c::Int64, epsilon::Float64, energies::
 
     #rho =  1/(pi*n)*sum_var
     #ipr = epsilon/(pi*rho*n)*sum_ipr
-    1/pi*ldos
+    ldos
 
 end
 

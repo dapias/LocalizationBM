@@ -122,7 +122,7 @@ function local_dos(lambda::Float64, epsilon::Float64, neighs::Array{Array{Int64,
         ldos[j] =  imag(omega_j)
     end
 
-    1/pi*ldos
+    ldos
 
 end
 

@@ -84,3 +84,39 @@ function DOS(lambda::Float64, c::Int64, T::Float64, Np::Int64, epsilon ::Float64
     
 end
 
+
+function resolvent(lambda::Float64, c::Int64, T::Float64, Np::Int64, epsilon ::Float64; nsteps = Np*10^3, ensemble = Np*10^2)
+    poparray = init_population(Np)
+    population_update!(lambda, c, T, Np, nsteps, epsilon, poparray);
+    
+    beta = 1.0/T
+    res = zeros(ensemble)
+    dist_energy = Exponential()
+    random_elements = rand(1:Np,c)
+    zetas_sample = poparray.zetas[random_elements]
+    energies = poparray.energies[random_elements]  
+    e1 = rand(dist_energy)
+    fsym = symmetric_f(e1, beta, energies)
+    sum_term = sum(im*fsym.*zetas_sample./(im*fsym .+ zetas_sample))
+    zeta_c =  im* (lambda-epsilon*im)*exp(beta*e1)*c  + sum_term
+    res[1] = real(c*exp(beta*e1)/zeta_c)
+    population_update!(lambda,c,T,Np, 1, epsilon, poparray)
+
+    for j in 2:ensemble
+        random_elements = rand(1:Np,c)
+        zetas_sample = poparray.zetas[random_elements]
+        energies = poparray.energies[random_elements]  
+        e1 = rand(dist_energy)
+        fsym = symmetric_f(e1, beta, energies)
+        sum_term = sum(im*fsym.*zetas_sample./(im*fsym .+ zetas_sample))
+        zeta_c =   im*(lambda-epsilon*im)/(exp(-beta*e1)/c)  + sum_term
+        res[j] = real(c*exp(beta*e1)/zeta_c)
+        ##update the population with new values
+        population_update!(lambda,c,T,Np, 1, epsilon, poparray)
+        ##########################
+    end
+
+    res
+    
+end
+
