@@ -20,13 +20,15 @@ function conf_model(N, α, c)
     end
     
     G = nx.configuration_model(E)
-    a = nx.adjacency_matrix(G, nodelist = 0:N-1)
+    gg = G.subgraph(py"max"(nx.connected_components(G), key=py"len"))
+    a = nx.adjacency_matrix(gg)
+    nnodes = gg.number_of_nodes()
     
-    a.A  ###Return Adjacency Matrix
+    a.A, nnodes ###Return Adjacency Matrix
 end
 
 function weights(N, α, c)
-    A = conf_model(N, α, c)
+    A, N = conf_model(N, α, c)
     J = rand(Normal(0, 1/sqrt(c)), N,N)
     M = zeros(N,N);
     for i in 1:N
@@ -39,9 +41,8 @@ function weights(N, α, c)
     indices = findall(x-> x .!= 0.0 , M);
     nei = [[l[2] for l in indices[findall(x-> x[1] == k, indices)]] for k in 1:N];
     
-    M, nei, indices
+    M, nei, indices, A, N
 end
-
 
 
 function local_error(lambda::Float64,  neighs::Array{Array{Int64,1},1},
